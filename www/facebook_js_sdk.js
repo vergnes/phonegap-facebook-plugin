@@ -5106,31 +5106,39 @@ FB.provide('', {
     // If the nativeInterface arg is specified then call out to the nativeInterface 
     // which uses the native app rather than using the iframe / popup web
     if (FB._nativeInterface) {
-        var alertTitle = 'Something Went Wrong\n\n';
+	var alertTitle = 'Something Went Wrong\n\n';
+	var onError = function(e) {
+	    console.log(JSON.stringify(e));
+            if (e.type == 'com.facebook.FacebookOperationCanceledException') {
+        	cb({});
+            } else {
+        	alert(alertTitle + e.message);
+            }
+        };
         switch (params.method) {
             case 'auth.login':
-                FB._nativeInterface.login(params, cb, function(e) {alert(alertTitle + e);});
+                FB._nativeInterface.login(params, cb, onError);
                 break;
             case 'permissions.request':
-                FB._nativeInterface.login(params, cb, function(e) {alert(alertTitle + e);});
+                FB._nativeInterface.login(params, cb, onError);
                 break;
             case 'permissions.oauth':
-                FB._nativeInterface.login(params, cb, function(e) {alert(alertTitle + e);});
+                FB._nativeInterface.login(params, cb, onError);
                 break;
             case 'auth.logout':
-                FB._nativeInterface.logout(cb, function(e) {alert(alertTitle + e);});
+                FB._nativeInterface.logout(cb, onError);
                 break;
             case 'auth.status':
-                FB._nativeInterface.getLoginStatus(cb, function(e) {alert(alertTitle + e);});
+                FB._nativeInterface.getLoginStatus(cb, onError);
                 break;
             case 'login.status':
-                FB._nativeInterface.getLoginStatus(cb, function(e) {alert(alertTitle + e);});
+                FB._nativeInterface.getLoginStatus(cb, onError);
                 break;
             case 'feed':
-                FB._nativeInterface.dialog(params, cb, function(e) {alert(alertTitle + e);});
+                FB._nativeInterface.dialog(params, cb, onError);
                 break;
             case 'apprequests':
-                FB._nativeInterface.dialog(params, cb, function(e) {alert(alertTitle + e);});
+                FB._nativeInterface.dialog(params, cb, onError);
             break;
         }
         return;
